@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Velocity Health – Command Center</title>
+<style>
+  :root{
+    --bg:#0b0f14; --card:#111722; --ink:#e6f0ff; --muted:#9bb3cc;
+    --accent:#1aa179; --accent-2:#2f7de1; --line:#233044;
+  }
+  body.light {
+    --bg: #f7fafd;
+    --card: #f3f5fa;
+    --ink: #1b2638;
+    --muted: #5f7694;
+    --accent: #1aa179;
+    --accent-2: #2f7de1;
+    --line: #d0d8e8;
+    background: linear-gradient(180deg, #f7fafc, #e9f1fa 40%, #f7fafc 100%);
+    color: var(--ink);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    color:var(--ink); background:linear-gradient(180deg,#0a0e13, #0b1420 40%, #0a0e13 100%);
+    transition: background 0.3s, color 0.3s;
+  }
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(6px);
+    background: rgba(10,14,19,.85);
+    border-bottom: 1px solid var(--line);
+    background-clip: padding-box;
+    will-change: transform;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06);
+  }
+  body.light header{
+    background:rgba(255,255,255,0.92);
+    transition: background 0.2s;
+  }
+  .wrap{max-width:1100px; margin:auto; padding:20px}
+  .brand{display:flex; align-items:center; gap:12px}
+  .logo{
+    width:40px; height:40px; border-radius:8px;
+    background: radial-gradient(circle at 30% 30%, #33e0a1, #0a6148 60%, #033328);
+    border:1px solid #1a6b54; box-shadow:0 0 0 2px #033b2f inset;
+  }
+  body.light .logo {
+    background: radial-gradient(circle at 30% 30%, #33e0a1, #aef2e2 60%, #a4eac9);
+    border:1px solid #a0d0c0;
+    box-shadow:0 0 0 2px #d9f8ec inset;
+  }
+  h1{margin:0; font-size:1.25rem; letter-spacing:.3px}
+  nav.tabs{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+  .tab{
+    border:1px solid var(--line); color:var(--ink); background:#0f1420; 
+    padding:8px 12px; border-radius:10px; cursor:pointer;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+  }
+  .tab.active{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset}
+  body.light .tab {
+    background: #f6fbff;
+    color: var(--ink);
+    border:1px solid var(--line);
+  }
+  body.light .tab.active {
+    border-color: var(--accent);
+    box-shadow:0 0 0 1px var(--accent) inset;
+  }
+  main{padding:24px 20px}
+  .grid{display:grid; gap:16px}
+  @media(min-width:900px){ .grid{grid-template-columns: 1.2fr 1fr} }
+  section.card{
+    background:linear-gradient(180deg,#0d1420,#0c121c);
+    border:1px solid var(--line); border-radius:16px; padding:16px 16px 18px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  body.light section.card{
+    background: linear-gradient(180deg, #f8fafc, #e9f1fa);
+    border:1px solid var(--line);
+  }
+  h2{margin:.2rem 0 8px; font-size:1.05rem}
+  h3{margin:12px 0 8px; font-size:1rem}
+  p{margin:.35rem 0 .6rem}
+  .muted{color:var(--muted)}
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:8px}
+  .pill{
+    border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#0c131d;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .pill b{display:block; color:#fff; font-size:1rem}
+  body.light .pill {
+    background: #f3f5fa;
+    color: var(--ink);
+    border:1px solid var(--line);
+  }
+  body.light .pill b { color: #1b2638; }
+  table{width:100%; border-collapse:collapse; font-size:.92rem}
+  th,td{border-bottom:1px solid var(--line); padding:8px 6px; vertical-align:top}
+  th{color:#cfe1ff; text-align:left}
+  body.light th { color: #2f7de1; }
+  .btns{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  .btn{
+    border:1px solid var(--accent-2); background:linear-gradient(180deg,#15345a,#0f2744);
+    color:#eaf2ff; padding:8px 12px; border-radius:10px; cursor:pointer;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+  }
+  .btn.secondary{border-color:var(--line); background:#0e1622}
+  body.light .btn {
+    background: linear-gradient(180deg,#f7fafc,#e6f4fd);
+    color:#1b2638;
+    border:1px solid var(--line);
+  }
+  body.light .btn.secondary {
+    background:#f3f5fa;
+    border-color:var(--line);
+    color:#5f7694;
+  }
+  input,select,textarea{
+    width:100%; background:#0a121c; color:var(--ink); border:1px solid var(--line);
+    border-radius:10px; padding:10px; font:inherit;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+  body.light input,body.light select,body.light textarea {
+    background: #f6fbff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .two{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  .notice{border-left:3px solid var(--accent); padding:10px 12px; background:#0a1512; border-radius:8px}
+  body.light .notice {
+    background: #e3f5ee;
+    border-left: 3px solid var(--accent);
+  }
+  .video-card{border:1px dashed #365; padding:10px; border-radius:10px; background:#0b1318}
+  body.light .video-card {
+    background: #f3f5fa;
+    border: 1px dashed #8fe5c8;
+  }
+  footer{padding:30px 20px; color:var(--muted); text-align:center}
+  .small{font-size:.86rem}
+  .chip{display:inline-block; padding:3px 8px; border-radius:999px; border:1px solid var(--line); margin:2px 4px 2px 0; color:#cfe1ff}
+  .accent{color:#8fe5c8}
+  body.light .accent { color: #1aa179; }
+  /* Mobile optimization */
+  @media (max-width: 600px) {
+    .wrap { padding: 10px; }
+    .grid { grid-template-columns: 1fr; }
+    section.card { padding: 10px 6px; }
+    h1 { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<noscript>
+  <div style="padding:1em;background:#333;color:#fff;border-radius:8px;margin:1em 0;text-align:center;">
+    This app works best with JavaScript enabled.
+  </div>
+</noscript>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Velocity Health – Command Center</h1>
+          <div class="muted small">Strong. Sharp. Metabolically resilient.</div>
+        </div>
+        <button id="toggleTheme" class="btn secondary" style="margin-left:auto;">☀️ / 🌙</button>
+      </div>
+      <!-- Tabs nav with aria-label for accessibility -->
+      <nav class="tabs" id="tabs" aria-label="Main sections"></nav>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <!-- Left column -->
+    <section class="card" id="exec">
+      <h2>Executive Summary</h2>
+      <p><b>Mission:</b> Preserve and build muscle, optimize brain performance, and prevent age-related metabolic decline through targeted training, recovery, hormonal balance, and nutrient sufficiency.</p>
+      <div class="kpis">
+        <div class="pill"><b>Strength</b><span class="muted">3–4×/wk resistance</span></div>
+        <div class="pill"><b>Cardio</b><span class="muted">2–3×/wk (HIIT + Zone 2)</span></div>
+        <div class="pill"><b>Sleep</b><span class="muted">8–9 hrs</span></div>
+        <div class="pill"><b>Labs</b><span class="muted">Quarterly</span></div>
+      </div>
+      <div class="btns">
+        <button class="btn" id="exportIcsBtn">Export Reminders (.ics)</button>
+        <button class="btn secondary" id="savePrefsBtn">Save Preferences</button>
+        <button class="btn secondary" id="resetPrefsBtn">Reset</button>
+      </div>
+      <p class="muted small" id="saveMsg" style="margin-top:6px;"></p>
+    </section>
+
+    <!-- Right column -->
+    <section class="card" id="reminders">
+      <h2>Reminders & Preferences</h2>
+      <div class="two">
+        <div>
+          <label for="amTime">AM supplements time</label>
+          <input id="amTime" type="time" value="07:00">
+        </div>
+        <div>
+          <label for="midTime">Midday supplements time</label>
+          <input id="midTime" type="time" value="12:30">
+        </div>
+      </div>
+      <div class="two" style="margin-top:8px">
+        <div>
+          <label for="pmTime">PM supplements time</label>
+          <input id="pmTime" type="time" value="20:00">
+        </div>
+        <div>
+          <label for="wkPlan">Weekly plan (Sunday)</label>
+          <input id="wkPlan" type="time" value="18:00">
+        </div>
+      </div>
+      <div class="two" style="margin-top:8px">
+        <div>
+          <label for="wkReview">Weekly review (Friday)</label>
+          <input id="wkReview" type="time" value="17:00">
+        </div>
+        <div>
+          <label for="qLabs">Quarterly labs (1st day)</label>
+          <input id="qLabs" type="time" value="08:00">
+        </div>
+      </div>
+      <div class="two" style="margin-top:8px">
+        <div>
+          <label for="qReview">Quarterly lab review (last day)</label>
+          <input id="qReview" type="time" value="18:00">
+        </div>
+        <div>
+          <label for="tz">Timezone (IANA)</label>
+          <input id="tz" placeholder="America/New_York" value="America/New_York">
+        </div>
+      </div>
+      <p class="notice small" style="margin-top:10px">
+        Tip: click “Export Reminders (.ics)” to add events to your calendar. We’ll generate daily, weekly, and quarterly items using your times and timezone.
+      </p>
+    </section>
+
+    <!-- Yearly plan -->
+    <section class="card" id="year">
+      <h2>Yearly Plan – Quarter Focus</h2>
+      <table>
+        <thead><tr>
+          <th>Quarter</th><th>Focus</th><th>Training</th><th>Nutrition</th><th>Supplements/Peptides</th><th>Key Labs</th>
+        </tr></thead>
+        <tbody id="yearTbody"></tbody>
+      </table>
+    </section>
+
+    <!-- Monthly plan -->
+    <section class="card" id="month">
+      <h2>Monthly Action Plan</h2>
+      <table>
+        <thead><tr><th>Month</th><th>Primary Focus</th><th>Action Items</th></tr></thead>
+        <tbody id="monthTbody"></tbody>
+      </table>
+    </section>
+
+    <!-- Weekly microcycles -->
+    <section class="card" id="week">
+      <h2>Weekly Microcycles</h2>
+      <div id="weeklyBlocks"></div>
+    </section>
+
+    <!-- Supplements -->
+    <section class="card" id="supps">
+      <h2>Supplement & Peptide Schedule</h2>
+      <h3>Core Stack (Year-Round)</h3>
+      <table>
+        <thead><tr><th>Supplement</th><th>Dose</th><th>Timing</th><th>Notes</th></tr></thead>
+        <tbody id="coreSupps"></tbody>
+      </table>
+      <h3 style="margin-top:14px">Quarter-Specific Additions</h3>
+      <table>
+        <thead><tr><th>Quarter</th><th>Supplement / Peptide</th><th>Dose</th><th>Timing</th><th>Goal</th></tr></thead>
+        <tbody id="qSupps"></tbody>
+      </table>
+      <p class="muted small" style="margin-top:8px">Clinical therapies like CJC-1295, Ipamorelin, MOTS-c, Semax/Selank, and Rapamycin should be physician-guided.</p>
+    </section>
+
+    <!-- Videos -->
+    <section class="card" id="videos">
+      <h2>Video Links (vertical 9:16)</h2>
+      <div class="video-card">
+        <div class="two">
+          <div><label for="vIntro">Intro / Playlist URL</label><input id="vIntro" placeholder="https://..." /></div>
+          <div><label for="vQ1">Q1 URL</label><input id="vQ1" placeholder="https://..." /></div>
+        </div>
+        <div class="two" style="margin-top:8px">
+          <div><label for="vQ2">Q2 URL</label><input id="vQ2" placeholder="https://..." /></div>
+          <div><label for="vQ3">Q3 URL</label><input id="vQ3" placeholder="https://..." /></div>
+        </div>
+        <div style="margin-top:8px">
+          <label for="vQ4">Q4 URL</label><input id="vQ4" placeholder="https://..." /></div>
+        <div class="btns" style="margin-top:10px">
+          <button class="btn secondary" id="saveVideosBtn">Save Links</button>
+          <a class="btn" id="openQ1" href="#" target="_blank" rel="noopener">▶ Start This Quarter</a>
+        </div>
+        <p class="muted small" id="videoMsg"></p>
+      </div>
+    </section>
+
+    <!-- Labs -->
+    <section class="card" id="labs">
+      <h2>Annual Lab Tracking (quick log)</h2>
+      <table>
+        <thead><tr><th>Quarter</th><th>Date</th><th>Key Labs</th><th>Results/Notes</th></tr></thead>
+        <tbody id="labTbody"></tbody>
+      </table>
+      <p class="muted small">For a full record, keep results in your EMR or private spreadsheet. This is a quick reference.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap small">
+      © Velocity Health — Command Center. Built for mobile. <span class="accent">Strong • Sharp • Resilient</span>
+    </div>
+  </footer>
+
+<script>
+/* ---------- Data model ---------- */
+const DATA = {
+  yearly: [
+    ["Q1 (Jan–Mar)","Muscle & Strength","4× strength, 1–2 cardio","+200–300 kcal surplus","Creatine; CJC-1295 + Ipamorelin","Hormones, CBC, CMP, Vit D, Fasting Insulin"],
+    ["Q2 (Apr–Jun)","Metabolic & Cardio","2–3 HIIT, 2–3 strength","Slight deficit, low-GI carbs","Berberine; MOTS-c","HbA1c, Fasting Insulin, Lipids"],
+    ["Q3 (Jul–Sep)","Brain Optimization","Strength + dual-task","High DHA, polyphenols","Lion’s Mane; Semax/Selank","B12, Folate, Homocysteine, hs-CRP"],
+    ["Q4 (Oct–Dec)","Longevity & Recovery","Mobility, light resistance","Anti-inflammatory; IF 2–3×/wk","NAC + Glycine; Rapamycin (guided)","DUTCH, NutrEval"]
+  ],
+  monthly: [
+    ["Jan","Strength Kickoff","Start CJC-1295+Ipamorelin; 4× heavy lifting; surplus; baseline labs"],
+    ["Feb","Muscle Growth","Accessory lifts; creatine daily; protein tracking"],
+    ["Mar","Strength Consolidation","+5–10% load; recheck measures"],
+    ["Apr","Metabolic Shift","Begin MOTS-c; HIIT 2–3×/wk; slight deficit"],
+    ["May","Cardio Build","Zone 2 → 45–60 min/wk; add berberine"],
+    ["Jun","VO₂ Max Peak","Push HIIT intensity; retest HbA1c"],
+    ["Jul","Brain Boost","Start Semax/Selank; dual-task drills; omega-3 3 g/day"],
+    ["Aug","Cognitive Challenge","Skill-based cardio; HRV training"],
+    ["Sep","Mental Endurance","Endurance + brain games; check hs-CRP"],
+    ["Oct","Recovery Reset","Mobility/yoga; consider rapamycin (MD)"],
+    ["Nov","Cellular Repair","NAC + Glycine; anti-inflammatory diet"],
+    ["Dec","Year Wrap","Repeat DUTCH/NutrEval; plan next year"]
+  ],
+  weekly: {
+    Q1:[
+      ["Mon","Upper heavy (bench, pull-ups, rows) + mobility"],
+      ["Tue","Lower heavy (squat/deadlift) + core"],
+      ["Wed","Zone 2 (30 min) + stretch"],
+      ["Thu","Upper accessory + grip"],
+      ["Fri","Lower accessory + carries"],
+      ["Sat","HIIT (10×30 s) + abs"],
+      ["Sun","Active recovery"]
+    ],
+    Q2:[
+      ["Mon","Full-body circuit + core"],
+      ["Tue","HIIT 20–25 min + mobility"],
+      ["Wed","Zone 2 (45 min)"],
+      ["Thu","Upper strength (3×8–10)"],
+      ["Fri","HIIT sprints (8–10)"],
+      ["Sat","Lower strength (3×8–10)"],
+      ["Sun","Recovery + breathing"]
+    ],
+    Q3:[
+      ["Mon","Strength + dual-task drills"],
+      ["Tue","Skill cardio + meditation"],
+      ["Wed","Zone 2 + mobility"],
+      ["Thu","Upper strength + coordination"],
+      ["Fri","HIIT + brain games"],
+      ["Sat","Outdoor sport"],
+      ["Sun","Sauna/reading/recovery"]
+    ],
+    Q4:[
+      ["Mon","Mobility + light resistance"],
+      ["Tue","Zone 2 (30–40 min)"],
+      ["Wed","Yoga/Pilates + breathwork"],
+      ["Thu","Light strength (50–60%)"],
+      ["Fri","Hike / outdoor"],
+      ["Sat","IF day + walk"],
+      ["Sun","Rest"]
+    ]
+  },
+  coreSupps: [
+    ["Omega-3 (EPA/DHA)","2–3 g/day","AM with meal","Brain/heart, anti-inflammatory"],
+    ["Magnesium glycinate","300–400 mg","PM pre-bed","Sleep & recovery"],
+    ["CoQ10 (Ubiquinol)","100–200 mg","AM with fat","Mitochondrial support"],
+    ["Vitamin D3 + K2","2,000–5,000 IU","AM","Target serum 50–70 ng/mL"],
+    ["B-Complex (active)","per label","AM","Methylated forms"],
+    ["Vitamin C","500–1,000 mg","AM","Antioxidant"],
+    ["Alpha-lipoic acid","200–300 mg","AM","Glucose & mitochondria"],
+    ["Creatine monohydrate","3–5 g","AM or post-workout","Strength & cognition"]
+  ],
+  qSupps: [
+    ["Q1","CJC-1295 + Ipamorelin","per MD","PM pre-bed","Recovery; muscle"],
+    ["Q1","Collagen + Vit C","per label","AM or post-training","Tendon/ligament"],
+    ["Q2","Berberine","500 mg","2–3×/day before meals","Glucose control"],
+    ["Q2","MOTS-c","per MD","per protocol","Mitochondria"],
+    ["Q3","Lion’s Mane","500–1,000 mg","AM","Neurogenesis"],
+    ["Q3","Semax/Selank","per MD","AM or pre-focus","Cognition"],
+    ["Q4","NAC + Glycine","600 mg ×2 / 3–5 g","AM & PM","Glutathione & longevity"],
+    ["Q4","Rapamycin","per MD","weekly","mTOR modulation"]
+  ],
+  labs: [
+    ["Q1","(yyyy-mm-dd)","Hormones, CBC, CMP, Vit D, Fasting Insulin",""],
+    ["Q2","(yyyy-mm-dd)","HbA1c, Fasting Insulin, Lipids",""],
+    ["Q3","(yyyy-mm-dd)","B12, Folate, Homocysteine, hs-CRP",""],
+    ["Q4","(yyyy-mm-dd)","DUTCH, NutrEval",""]
+  ]
+};
+
+/* ---------- DOM helpers ---------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+
+function renderTable(tbody, rows){
+  tbody.innerHTML = rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');
+}
+
+function render(){
+  renderTable($('#yearTbody'), DATA.yearly.map(r=>r));
+  renderTable($('#monthTbody'), DATA.monthly.map(r=>r));
+  $('#weeklyBlocks').innerHTML = ["Q1","Q2","Q3","Q4"].map(q=>{
+    const rows = DATA.weekly[q].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+    return `<h3>${q} – Weekly</h3>
+      <table><thead><tr><th>Day</th><th>Activity</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }).join('');
+  renderTable($('#coreSupps'), DATA.coreSupps.map(r=>r));
+  renderTable($('#qSupps'), DATA.qSupps.map(r=>r));
+  renderTable($('#labTbody'), DATA.labs.map(r=>r));
+}
+
+/* ---------- Tabs ---------- */
+const sections = [
+  ["Overview","#exec"],["Reminders","#reminders"],["Year","#year"],
+  ["Month","#month"],["Week","#week"],["Supplements","#supps"],
+  ["Videos","#videos"],["Labs","#labs"]
+];
+function buildTabs(){
+  const el = $('#tabs');
+  el.innerHTML = sections.map((s,i)=>`<button class="tab ${i===0?'active':''}" data-target="${s[1]}">${s[0]}</button>`).join('');
+  el.addEventListener('click', e=>{
+    if(!e.target.matches('.tab')) return;
+    $$('.tab').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.target.slice(1)).scrollIntoView({behavior:'smooth', block:'start'});
+  });
+}
+
+/* ---------- Preferences / Storage ---------- */
+const PREF_KEYS = ["amTime","midTime","pmTime","wkPlan","wkReview","qLabs","qReview","tz","vIntro","vQ1","vQ2","vQ3","vQ4"];
+function savePrefs(msgEl){
+  PREF_KEYS.forEach(k=>localStorage.setItem(k, $('#'+k)?.value ?? ''));
+  if(msgEl){ msgEl.textContent = "Saved."; setTimeout(()=>msgEl.textContent="",1500); }
+}
+function loadPrefs(){
+  PREF_KEYS.forEach(k=>{
+    const v = localStorage.getItem(k);
+    if(v && $('#'+k)) $('#'+k).value = v;
+  });
+  // wire the "Start This Quarter" link
+  const q1 = $('#vQ1').value || '#';
+  $('#openQ1').href = q1;
+}
+function resetPrefs(msgEl){
+  PREF_KEYS.forEach(k=>localStorage.removeItem(k));
+  loadPrefs();
+  if(msgEl){ msgEl.textContent = "Reset to defaults."; setTimeout(()=>msgEl.textContent="",1500); }
+}
+
+/* ---------- ICS Export ---------- */
+// Simple ICS builder for recurring events
+function pad(n){return String(n).padStart(2,'0');}
+function dtstampUTC(){
+  const d = new Date();
+  return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+'00Z';
+}
+function makeVEVENT({summary, rrule, startTimeLocal, tzid}){
+  // DTSTART as floating local with TZID per RFC5545
+  return [
+   "BEGIN:VEVENT",
+   `UID:${crypto.randomUUID()}@velocity.health`,
+   `DTSTAMP:${dtstampUTC()}`,
+   `SUMMARY:${summary}`,
+   `DTSTART;TZID=${tzid}:${startTimeLocal}`,
+   rrule ? `RRULE:${rrule}` : "",
+   "END:VEVENT"
+  ].filter(Boolean).join("\r\n");
+}
+function exportICS(){
+  const tz = $('#tz').value || 'America/New_York';
+  const t = (id)=> ($('#'+id).value || "07:00")+":00";
+  const am = t('amTime'), mid = t('midTime'), pm = t('pmTime');
+  const wkP = t('wkPlan'), wkR = t('wkReview');
+  const qL = t('qLabs'), qRv = t('qReview');
+
+  // Build RRULEs
+  const daily = "FREQ=DAILY";
+  const sunWeekly = "FREQ=WEEKLY;BYDAY=SU";
+  const friWeekly = "FREQ=WEEKLY;BYDAY=FR";
+  // Quarterly starts (Jan/Apr/Jul/Oct = BYMONTH=1,4,7,10 and day 1)
+  const qStart = "FREQ=YEARLY;BYMONTH=1,4,7,10;BYMONTHDAY=1";
+  // Quarterly reviews (Mar/Jun/Sep/Dec last day). Use BYMONTH=3,6,9,12; BYSETPOS=-1 with BYDAY=MO,TU,WE,TH,FR,SA,SU
+  const qEnd = "FREQ=YEARLY;BYMONTH=3,6,9,12;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYSETPOS=-1";
+
+  const now = new Date();
+  const y = now.getFullYear();
+  function withDate(time){ // YYYYMMDDTHHMMSS local
+    const d = `${y}${pad(now.getMonth()+1)}${pad(now.getDate())}T${time.replaceAll(":","")}`;
+    return d;
+  }
+
+  const events = [
+    makeVEVENT({summary:"AM Supplements", rrule:daily, startTimeLocal:withDate(am), tzid:tz}),
+    makeVEVENT({summary:"Midday Supplements", rrule:daily, startTimeLocal:withDate(mid), tzid:tz}),
+    makeVEVENT({summary:"PM Supplements", rrule:daily, startTimeLocal:withDate(pm), tzid:tz}),
+    makeVEVENT({summary:"Plan Workouts (Weekly)", rrule:sunWeekly, startTimeLocal:withDate(wkP), tzid:tz}),
+    makeVEVENT({summary:"Weekly Progress Review", rrule:friWeekly, startTimeLocal:withDate(wkR), tzid:tz}),
+    makeVEVENT({summary:"Quarterly Labs", rrule:qStart, startTimeLocal:withDate(qL), tzid:tz}),
+    makeVEVENT({summary:"Quarterly Lab Review", rrule:qEnd, startTimeLocal:withDate(qRv), tzid:tz})
+  ];
+
+  const ics = [
+    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Velocity Health//Command Center//EN",
+    ...events, "END:VCALENDAR"
+  ].join("\r\n");
+
+  const blob = new Blob([ics], {type:"text/calendar"});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = "Velocity_Health_Reminders.ics";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---------- Video links ---------- */
+function saveVideoLinks(){
+  savePrefs($('#videoMsg'));
+  // update Start This Quarter link
+  const url = $('#vQ1').value?.trim();
+  if(url){ $('#openQ1').href = url; }
+}
+
+/* ---------- Theme Toggle ---------- */
+function setTheme(mode) {
+  if (mode === 'light') {
+    document.body.classList.add('light');
+    localStorage.setItem('vh_theme', 'light');
+    $('#toggleTheme').textContent = '🌙';
+    $('#toggleTheme').setAttribute('aria-label', 'Switch to dark mode');
+  } else {
+    document.body.classList.remove('light');
+    localStorage.setItem('vh_theme', 'dark');
+    $('#toggleTheme').textContent = '☀️';
+    $('#toggleTheme').setAttribute('aria-label', 'Switch to light mode');
+  }
+}
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light');
+  setTheme(isLight ? 'dark' : 'light');
+}
+$('#toggleTheme').addEventListener('click', toggleTheme);
+// On load: set theme from localStorage or prefers-color-scheme
+(function autoTheme(){
+  const stored = localStorage.getItem('vh_theme');
+  if (stored) setTheme(stored);
+  else if (window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+  else setTheme('dark');
+})();
+
+/* ---------- Init ---------- */
+render();
+buildTabs();
+loadPrefs();
+
+$('#exportIcsBtn').addEventListener('click', exportICS);
+$('#savePrefsBtn').addEventListener('click', ()=>savePrefs($('#saveMsg')));
+$('#resetPrefsBtn').addEventListener('click', ()=>resetPrefs($('#saveMsg')));
+$('#saveVideosBtn').addEventListener('click', saveVideoLinks);
+</script>
+</body>
+</html>
