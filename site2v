@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Chapter - Your Path Forward</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            position: relative; /* Needed for z-index stacking */
+            overflow-x: hidden; /* Hide horizontal scrollbar from bubbles */
+        }
+        .section {
+            min-height: 80vh;
+            padding: 8rem 1rem;
+        }
+        @media (max-width: 768px) {
+            .section {
+                padding: 4rem 1rem;
+            }
+        }
+        /* Styles for scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Styles for moving bubbles */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind the content */
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -150px; /* Start below the screen */
+            background-color: rgba(34, 197, 94, 0.15); /* Light green */
+            border-radius: 50%;
+            animation: rise 25s infinite linear;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(10vw);
+            }
+            100% {
+                transform: translateY(-120vh) translateX(-10vw);
+                opacity: 0;
+            }
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #16a34a; /* green-600 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased">
+
+    <!-- Moving Bubbles Background -->
+    <div class="bubbles-container" id="bubbles-bg"></div>
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-2xl font-bold text-green-600">Velocity Health</a>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-green-600 transition-colors">Home</a>
+                    <a href="#services" class="text-gray-600 hover:text-green-600 transition-colors">Services</a>
+                    <a href="#promise" class="text-gray-600 hover:text-green-600 transition-colors">Our Promise</a>
+                    <a href="#planner" class="text-gray-600 hover:text-green-600 transition-colors">AI Planner</a>
+                    <a href="#affirmation" class="text-gray-600 hover:text-green-600 transition-colors">Affirmations</a>
+                    <a href="#contact" class="text-gray-600 hover:text-green-600 transition-colors">Contact</a>
+                </nav>
+                <button class="md:hidden text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10"> <!-- Ensure main content is above bubbles -->
+        <!-- Hero Section -->
+        <section id="home" class="section flex items-center justify-center text-center bg-cover bg-center" style="background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://placehold.co/1600x900/F3F4F6/FFFFFF?text=');">
+            <div class="max-w-3xl mx-auto">
+                <p class="text-2xl md:text-3xl font-light text-green-600 mb-2 tracking-widest uppercase">Velocity Health</p>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-gray-900">Your best years are still in front of you.</h1>
+                <p class="text-lg md:text-xl text-gray-700 mb-8">Let us help you navigate the path forward.</p>
+                <a href="#services" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105 shadow-lg">
+                    Learn How
+                </a>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-12 reveal">We are your dedicated health partners.</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal">
+                        <div class="text-green-600 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Your Chief Medical Officer</h3>
+                        <p class="text-gray-600">Expert medical guidance to optimize your health and longevity.</p>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal" style="transition-delay: 0.2s;">
+                         <div class="text-green-600 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Your Mindset Coach</h3>
+                        <p class="text-gray-600">Cultivating a resilient and positive outlook for the years ahead.</p>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal" style="transition-delay: 0.4s;">
+                         <div class="text-green-600 mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Your Accountability Health Coach</h3>
+                        <p class="text-gray-600">Consistent support to help you stay on track with your health goals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promise Section -->
+        <section id="promise" class="section bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2 reveal">
+                        <img src="https://placehold.co/600x400/FFFFFF/1F2937?text=Our+Promise" alt="Our Promise Image" class="rounded-lg shadow-2xl">
+                    </div>
+                    <div class="md:w-1/2 reveal" style="transition-delay: 0.2s;">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Promise To You</h2>
+                        <p class="text-gray-700 mb-4 text-xl">
+                           We are the ones who make sure that when you fall at 95, you get back up.
+                        </p>
+                        <p class="text-gray-600">
+                            Our dedicated team combines medical expertise with personalized coaching to ensure you not only live longer, but live better. We're your partners in health, every step of the way.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Wellness Planner Section -->
+        <section id="planner" class="section bg-white">
+            <div class="container mx-auto px-6 max-w-2xl text-center">
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Your AI Wellness Planner</h2>
+                    <p class="text-gray-600 mb-8">Tell us a little about yourself, and our AI will generate a personalized wellness plan to help you get started on your journey.</p>
+                </div>
+                <form id="wellness-form" class="space-y-6 reveal bg-gray-50 p-8 rounded-lg shadow-lg" style="transition-delay: 0.2s;">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input id="age" type="number" placeholder="Your Age" class="w-full bg-white text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow">
+                        <select id="activity" class="w-full bg-white text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow">
+                            <option value="sedentary">Sedentary</option>
+                            <option value="lightly_active">Lightly Active</option>
+                            <option value="moderately_active">Moderately Active</option>
+                            <option value="very_active">Very Active</option>
+                        </select>
+                    </div>
+                    <input id="goal" type="text" placeholder="Your Primary Health Goal (e.g., improve sleep, lose weight)" class="w-full bg-white text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow">
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-lg flex items-center justify-center">
+                        ✨ Generate My Plan
+                    </button>
+                </form>
+                <div id="plan-result" class="mt-8 text-left bg-white p-6 rounded-lg shadow-inner hidden">
+                    <div id="loader" class="loader hidden"></div>
+                    <div id="plan-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Affirmation Generator Section -->
+        <section id="affirmation" class="section bg-gray-100">
+            <div class="container mx-auto px-6 max-w-2xl text-center">
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">✨ Create Your Daily Affirmation</h2>
+                    <p class="text-gray-600 mb-8">Feeling stuck or facing a challenge? Describe it below, and let our AI mindset coach generate a positive affirmation to help you shift your perspective.</p>
+                </div>
+                <form id="affirmation-form" class="space-y-6 reveal bg-white p-8 rounded-lg shadow-lg" style="transition-delay: 0.2s;">
+                    <textarea id="challenge" placeholder="Describe your challenge (e.g., 'I feel unmotivated to exercise')" rows="3" class="w-full bg-gray-100 text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow"></textarea>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-lg flex items-center justify-center">
+                        Generate My Affirmation
+                    </button>
+                </form>
+                <div id="affirmation-result" class="mt-8 text-center bg-white p-6 rounded-lg shadow-inner hidden">
+                    <div id="affirmation-loader" class="loader hidden"></div>
+                    <div id="affirmation-content" class="text-2xl font-light text-gray-700"></div>
+                </div>
+            </div>
+        </section>
+
+
+         <!-- Contact Section -->
+        <section id="contact" class="section bg-white">
+            <div class="container mx-auto px-6 max-w-xl text-center">
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Get In Touch</h2>
+                    <p class="text-gray-600 mb-8">Have a question or want to work together? Send us a message!</p>
+                </div>
+                <form class="space-y-6 reveal" style="transition-delay: 0.2s;">
+                    <input type="text" placeholder="Your Name" class="w-full bg-gray-200 text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow">
+                    <input type="email" placeholder="Your Email" class="w-full bg-gray-200 text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow">
+                    <textarea placeholder="Your Message" rows="5" class="w-full bg-gray-200 text-gray-800 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow"></textarea>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-lg">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 relative z-10">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>&copy; 2024 Next Chapter. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // JavaScript for scroll animations
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        revealElements.forEach(element => {
+            observer.observe(element);
+        });
+        
+        // JavaScript for creating moving bubbles
+        const bubbleContainer = document.getElementById('bubbles-bg');
+        const bubblesCount = 20;
+
+        for (let i = 0; i < bubblesCount; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            
+            const size = Math.random() * 80 + 20; // 20px to 100px
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            
+            bubble.style.left = `${Math.random() * 100}%`;
+            
+            const duration = Math.random() * 15 + 15; // 15s to 30s
+            bubble.style.animationDuration = `${duration}s`;
+            
+            const delay = Math.random() * 10;
+            bubble.style.animationDelay = `${delay}s`;
+            
+            bubbleContainer.appendChild(bubble);
+        }
+
+        // --- Gemini API Integrations ---
+
+        const apiKey = ""; // API key will be handled by the environment
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+        // 1. AI Wellness Planner
+        const wellnessForm = document.getElementById('wellness-form');
+        const planResultContainer = document.getElementById('plan-result');
+        const planContent = document.getElementById('plan-content');
+        const planLoader = document.getElementById('loader');
+
+        wellnessForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const age = document.getElementById('age').value;
+            const activity = document.getElementById('activity').value;
+            const goal = document.getElementById('goal').value;
+
+            if (!age || !goal) {
+                planContent.innerHTML = '<p class="text-red-500 text-center">Please fill out your age and health goal.</p>';
+                planResultContainer.classList.remove('hidden');
+                return;
+            }
+
+            planResultContainer.classList.remove('hidden');
+            planContent.innerHTML = '';
+            planLoader.classList.remove('hidden');
+
+            const systemPrompt = `You are an expert mindset and health coach. Create a concise, positive, and actionable 3-day starter wellness plan. The plan should be easy to follow and encouraging. Focus on small, manageable steps. Format the response as simple HTML with headings and lists.`;
+            const userQuery = `My age is ${age}. My current activity level is ${activity}. My primary health goal is: "${goal}".`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+                
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    let text = candidate.content.parts[0].text;
+                    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/\n\*\s/g, '</li><li>').replace(/\n/g, '<br>');
+                    planContent.innerHTML = text;
+                } else {
+                    planContent.innerHTML = '<p class="text-red-500 text-center">Sorry, we couldn\'t generate a plan at this time. Please try again later.</p>';
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API for planner:", error);
+                planContent.innerHTML = '<p class="text-red-500 text-center">An error occurred. Please check the console for details.</p>';
+            } finally {
+                planLoader.classList.add('hidden');
+            }
+        });
+
+        // 2. AI Affirmation Generator
+        const affirmationForm = document.getElementById('affirmation-form');
+        const affirmationResultContainer = document.getElementById('affirmation-result');
+        const affirmationContent = document.getElementById('affirmation-content');
+        const affirmationLoader = document.getElementById('affirmation-loader');
+
+        affirmationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const challenge = document.getElementById('challenge').value;
+
+            if (!challenge) {
+                affirmationContent.innerHTML = '<p class="text-red-500 text-sm">Please describe your challenge first.</p>';
+                affirmationResultContainer.classList.remove('hidden');
+                return;
+            }
+
+            affirmationResultContainer.classList.remove('hidden');
+            affirmationContent.innerHTML = '';
+            affirmationLoader.classList.remove('hidden');
+
+            const systemPrompt = `You are an expert mindset coach. A user will describe a challenge. Your task is to generate one powerful, positive, and personal affirmation in response. The affirmation should be short (1-2 sentences), in the first person ("I am...", "I can..."), and directly address the underlying feeling of the challenge. Do not add any extra text, just the affirmation itself.`;
+            const userQuery = `My challenge is: "${challenge}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    affirmationContent.innerHTML = `"${candidate.content.parts[0].text}"`;
+                } else {
+                    affirmationContent.innerHTML = '<p class="text-red-500 text-center">Could not generate an affirmation. Please try a different challenge.</p>';
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API for affirmation:", error);
+                affirmationContent.innerHTML = '<p class="text-red-500 text-center">An error occurred. Please try again.</p>';
+            } finally {
+                affirmationLoader.classList.add('hidden');
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+
+
