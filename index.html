@@ -462,7 +462,7 @@ function savePrefs(msgEl){
 function loadPrefs(){
   PREF_KEYS.forEach(k=>{
     const v = localStorage.getItem(k);
-    if(v && $('#'+k)) $('#'+k).value = v;
+    if(v !== null && $('#'+k)) $('#'+k).value = v;
   });
   // wire the "Start This Quarter" link
   const q1 = $('#vQ1').value || '#';
